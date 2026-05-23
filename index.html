@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تواصل معنا - شدو ديزاين</title>
-    <!-- أيقونات -->
+    <!-- أيقونة الموقع (يرجى وضع الصورة في نفس المجلد باسم og-image.jpg) -->
+    <link rel="icon" href="og-image.jpg" type="image/jpeg">
+    <!-- أيقونات Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- خط عربي -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
@@ -12,7 +14,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: 'Cairo', sans-serif;
-            background: #f4f7fc;
+            background: #ffffff; /* خلفية بيضاء كاملة */
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -22,18 +24,19 @@
         .container {
             width: 100%;
             max-width: 750px;
-            background: #fff;
-            border-radius: 24px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+            background: #ffffff; /* نفس الخلفية البيضاء */
             padding: 35px 30px 25px;
-            transition: all 0.3s;
+            /* تمت إزالة الحدود والظلال والـ border-radius */
+            border: none;
+            box-shadow: none;
+            border-radius: 0;
             position: relative;
         }
         /* زر تبديل اللغة */
         .lang-switch {
             position: absolute;
-            top: 15px;
-            left: 20px; /* لأن الاتجاه RTL */
+            top: 0;
+            left: 0;
             background: #e9ecef;
             border: none;
             border-radius: 30px;
@@ -46,6 +49,7 @@
             display: flex;
             align-items: center;
             gap: 6px;
+            z-index: 10;
         }
         .lang-switch:hover {
             background: #4a6cf7;
@@ -244,7 +248,7 @@
         @media (max-width: 480px) {
             .container { padding: 20px 15px; }
             .header-title { font-size: 1.4rem; }
-            .lang-switch { top: 10px; left: 15px; }
+            .lang-switch { top: 0; left: 0; }
         }
         /* اتجاه الصفحة حسب اللغة */
         .ltr { direction: ltr; text-align: left; }
@@ -333,6 +337,7 @@
 </div>
 
 <script>
+    // (نفس السكربت السابق للترجمة والوظائف كما هو، لم يتغير)
     // العناصر
     const langSwitch = document.getElementById('langSwitch');
     const langLabel = document.getElementById('langLabel');
@@ -395,24 +400,19 @@
         }
     };
 
-    let currentLang = 'ar'; // اللغة الافتراضية
+    let currentLang = 'ar';
 
     // دالة تبديل اللغة
     function toggleLanguage() {
         currentLang = (currentLang === 'ar') ? 'en' : 'ar';
         applyLanguage(currentLang);
-        // حفظ الاختيار في localStorage
         localStorage.setItem('selectedLang', currentLang);
     }
 
     // دالة تطبيق اللغة
     function applyLanguage(lang) {
         const t = translations[lang];
-
-        // تبديل نص الزر
         langLabel.textContent = t.langLabel;
-
-        // العناوين والنصوص
         headerTitle.textContent = t.headerTitle;
         directCtaText.textContent = t.directCtaText;
         addressText.textContent = t.addressText;
@@ -420,20 +420,14 @@
         emailLabel.textContent = t.emailLabel;
         messageLabel.textContent = t.messageLabel;
         submitText.textContent = t.submitText;
-
-        // العناصر في النافذة المنبثقة (سيتم تحديث العناوين لاحقاً حسب الزر)
-        // لكن النصوص الثابتة: phoneText, whatsappText
         phoneText.textContent = t.phoneText;
         whatsappText.textContent = t.whatsappText;
         footerText.textContent = t.footerText;
         footerSuffix.textContent = t.footerSuffix;
-
-        // تغيير الـ placeholders
         document.getElementById('name').placeholder = t.placeholderName;
         document.getElementById('email').placeholder = t.placeholderEmail;
         document.getElementById('message').placeholder = t.placeholderMessage;
 
-        // تغيير اتجاه الصفحة
         if (lang === 'en') {
             container.classList.remove('rtl');
             container.classList.add('ltr');
@@ -445,13 +439,8 @@
             document.documentElement.dir = 'rtl';
             document.documentElement.lang = 'ar';
         }
-
-        // تحديث عنوان النافذة المنبثقة إذا كانت مفتوحة (لكننا سنعتمد على تحديثه عند الفتح)
-        // بما أن popupTitle يتم تعيينه عند الضغط على الزر، سنقوم بتحديثه في المتغيرات العامة
-        // سنقوم بضبط popupTitle في وظيفة الفتح
     }
 
-    // عند تحميل الصفحة، استرجاع اللغة المحفوظة
     window.addEventListener('DOMContentLoaded', function() {
         const savedLang = localStorage.getItem('selectedLang');
         if (savedLang && (savedLang === 'ar' || savedLang === 'en')) {
@@ -462,7 +451,6 @@
         }
     });
 
-    // زر تبديل اللغة
     langSwitch.addEventListener('click', toggleLanguage);
 
     // عناصر النافذة
@@ -473,7 +461,6 @@
     const directContactBtn = document.getElementById('directContactBtn');
     const contactForm = document.getElementById('contactForm');
 
-    // إغلاق النافذة
     function closePopup() {
         popupOverlay.classList.remove('active');
         document.body.style.overflow = 'auto';
@@ -483,16 +470,13 @@
         if (e.target === popupOverlay) closePopup();
     });
 
-    // 1. زر التواصل المباشر (أعلى)
     directContactBtn.addEventListener('click', function() {
         const t = translations[currentLang];
         popupTitle.textContent = t.popupTitleDirect;
-        // ربط الاتصال المباشر
         phoneLink.href = 'tel:+966569784323';
         phoneLink.className = 'popup-btn btn-phone';
         phoneLink.innerHTML = `<i class="fas fa-phone"></i><span>${t.phoneText}</span>`;
 
-        // ربط واتساب مباشر
         const msg = encodeURIComponent('Hello, I would like to contact you.');
         whatsappLink.href = `https://wa.me/966569784323?text=${msg}`;
         whatsappLink.className = 'popup-btn btn-whatsapp';
@@ -503,10 +487,8 @@
         document.body.style.overflow = 'hidden';
     });
 
-    // 2. زر الإرسال (نموذج)
     function handleSubmit(e) {
         e.preventDefault();
-
         const name = document.getElementById('name').value.trim();
         const email = document.getElementById('email').value.trim();
         const message = document.getElementById('message').value.trim();
@@ -519,7 +501,6 @@
         const t = translations[currentLang];
         popupTitle.textContent = t.popupTitleSend;
 
-        // رابط Gmail
         const subject = encodeURIComponent('Message from ' + name);
         const bodyGmail = encodeURIComponent(
             'Name: ' + name + '\n' +
@@ -530,7 +511,6 @@
         phoneLink.className = 'popup-btn btn-gmail';
         phoneLink.innerHTML = '<i class="fab fa-google"></i><span>Gmail</span>';
 
-        // رابط WhatsApp
         const bodyWhatsApp = encodeURIComponent(
             'Name: ' + name + '\n' +
             'Email: ' + email + '\n\n' +
