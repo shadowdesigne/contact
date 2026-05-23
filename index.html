@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تواصل معنا - شدو ديزاين</title>
+    <!-- أيقونات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- خط عربي -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: #f4f7fc;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 20px;
+        }
+        .container {
+            width: 100%;
+            max-width: 750px;
+            background: #fff;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+            padding: 35px 30px 25px;
+            transition: all 0.3s;
+            position: relative;
+        }
+        /* زر تبديل اللغة */
+        .lang-switch {
+            position: absolute;
+            top: 15px;
+            left: 20px; /* لأن الاتجاه RTL */
+            background: #e9ecef;
+            border: none;
+            border-radius: 30px;
+            padding: 6px 14px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #1e2a45;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .lang-switch:hover {
+            background: #4a6cf7;
+            color: #fff;
+        }
+        .lang-switch i { font-size: 0.9rem; }
+        .header-title {
+            text-align: center;
+            color: #1e2a45;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        /* زر التواصل المباشر في الأعلى */
+        .top-cta {
+            display: flex;
+            justify-content: center;
+            margin: 15px 0 20px;
+        }
+        .btn-top-contact {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 28px;
+            background: linear-gradient(135deg, #4a6cf7, #6a4cf7);
+            border: none;
+            border-radius: 50px;
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(74, 108, 247, 0.3);
+        }
+        .btn-top-contact:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(74, 108, 247, 0.4);
+        }
+        .btn-top-contact i { font-size: 1.2rem; }
+        /* معلومات الاتصال */
+        .contact-info {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px 25px;
+            background: #f8f9fa;
+            padding: 12px 20px;
+            border-radius: 16px;
+            margin-bottom: 25px;
+            border: 1px solid #e9ecef;
+        }
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #343a40;
+            font-size: 0.9rem;
+        }
+        .info-item i { color: #4a6cf7; font-size: 1.1rem; }
+        .info-item a { color: #4a6cf7; text-decoration: none; }
+        .info-item a:hover { color: #1e2a45; }
+        /* النموذج */
+        .form-group { margin-bottom: 18px; }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #212529;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 11px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: 'Cairo', sans-serif;
+            transition: 0.3s;
+            background: #fafbfc;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #4a6cf7;
+            box-shadow: 0 0 0 4px rgba(74,108,247,0.08);
+            background: #fff;
+        }
+        .form-group textarea { min-height: 90px; resize: vertical; }
+        /* زر الإرسال */
+        .submit-area { margin-top: 15px; }
+        .btn-submit {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(135deg, #4a6cf7, #6a4cf7);
+            border: none;
+            border-radius: 50px;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(74,108,247,0.25);
+        }
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(74,108,247,0.35);
+        }
+        /* النافذة المنبثقة */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .popup-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+        .popup-box {
+            background: #fff;
+            padding: 30px 25px;
+            border-radius: 24px;
+            text-align: center;
+            width: 90%;
+            max-width: 360px;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.2);
+            position: relative;
+            animation: popIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.9); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .popup-box h4 {
+            margin-bottom: 18px;
+            color: #1e2a45;
+            font-size: 1.1rem;
+        }
+        .popup-actions {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin: 10px 0 5px;
+        }
+        .popup-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 76px;
+            height: 76px;
+            border-radius: 50%;
+            text-decoration: none;
+            color: #fff;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+        }
+        .popup-btn i { font-size: 1.8rem; margin-bottom: 4px; }
+        .popup-btn:hover { transform: scale(1.08); }
+        .btn-gmail { background: #EA4335; }
+        .btn-gmail:hover { background: #c5221f; }
+        .btn-whatsapp { background: #25D366; }
+        .btn-whatsapp:hover { background: #1da851; }
+        .btn-phone { background: #34b7f1; }
+        .btn-phone:hover { background: #2a9fd1; }
+        .close-popup {
+            position: absolute;
+            top: 12px; left: 15px;
+            background: none; border: none;
+            font-size: 1.4rem; color: #999;
+            cursor: pointer; transition: color 0.3s;
+        }
+        .close-popup:hover { color: #333; }
+        .footer {
+            text-align: center;
+            margin-top: 28px;
+            padding-top: 18px;
+            border-top: 1px solid #e9ecef;
+            color: #6c757d;
+            font-size: 0.85rem;
+        }
+        .footer a {
+            color: #1e2a45;
+            font-weight: 700;
+            text-decoration: none;
+        }
+        .footer a:hover { color: #4a6cf7; }
+        @media (max-width: 480px) {
+            .container { padding: 20px 15px; }
+            .header-title { font-size: 1.4rem; }
+            .lang-switch { top: 10px; left: 15px; }
+        }
+        /* اتجاه الصفحة حسب اللغة */
+        .ltr { direction: ltr; text-align: left; }
+        .rtl { direction: rtl; text-align: right; }
+        .container.ltr .info-item .value-ar { text-align: left; direction: ltr; }
+    </style>
+</head>
+<body>
+
+<div class="container" id="mainContainer">
+    <!-- زر تبديل اللغة -->
+    <button class="lang-switch" id="langSwitch">
+        <i class="fas fa-globe"></i>
+        <span id="langLabel">English</span>
+    </button>
+
+    <!-- العنوان -->
+    <div class="header-title" id="headerTitle">تواصل معنا</div>
+
+    <!-- زر التواصل المباشر -->
+    <div class="top-cta">
+        <button class="btn-top-contact" id="directContactBtn">
+            <i class="fas fa-phone-alt"></i>
+            <span id="directCtaText">اضغط هنا للتواصل معنا مباشر</span>
+        </button>
+    </div>
+
+    <!-- معلومات الاتصال -->
+    <div class="contact-info">
+        <div class="info-item">
+            <i class="fas fa-envelope"></i>
+            <a href="mailto:Info@shadowdesigner.net">Info@shadowdesigner.net</a>
+        </div>
+        <div class="info-item">
+            <i class="fas fa-map-marker-alt"></i>
+            <span id="addressText">الرياض، حي الروضة، شارع عبادة بن الصامت</span>
+        </div>
+    </div>
+
+    <!-- نموذج البيانات -->
+    <form id="contactForm" onsubmit="handleSubmit(event)">
+        <div class="form-group">
+            <label for="name" id="nameLabel">الاسم الكامل</label>
+            <input type="text" id="name" placeholder="أدخل اسمك" required>
+        </div>
+        <div class="form-group">
+            <label for="email" id="emailLabel">البريد الإلكتروني</label>
+            <input type="email" id="email" placeholder="example@email.com" required>
+        </div>
+        <div class="form-group">
+            <label for="message" id="messageLabel">الرسالة</label>
+            <textarea id="message" placeholder="اكتب رسالتك هنا..." required></textarea>
+        </div>
+        <div class="submit-area">
+            <button type="submit" class="btn-submit" id="submitBtn">
+                <i class="fas fa-paper-plane" style="margin-left:8px;"></i>
+                <span id="submitText">إرسال</span>
+            </button>
+        </div>
+    </form>
+
+    <!-- النافذة المنبثقة -->
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup-box">
+            <button class="close-popup" id="closePopupBtn"><i class="fas fa-times"></i></button>
+            <h4 id="popupTitle">اختر طريقة التواصل</h4>
+            <div class="popup-actions" id="popupActions">
+                <a href="#" class="popup-btn btn-phone" id="phoneLink">
+                    <i class="fas fa-phone"></i>
+                    <span id="phoneText">اتصال</span>
+                </a>
+                <a href="#" class="popup-btn btn-whatsapp" id="whatsappLink">
+                    <i class="fab fa-whatsapp"></i>
+                    <span id="whatsappText">واتساب</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- التذييل -->
+    <div class="footer">
+        <span id="footerText">&copy; 2026 جميع الحقوق محفوظة - </span>
+        <a href="https://shadowdesigner.net/" target="_blank">shadowdesigner</a>
+        <span id="footerSuffix"> للدعاية والإعلان</span>
+    </div>
+</div>
+
+<script>
+    // العناصر
+    const langSwitch = document.getElementById('langSwitch');
+    const langLabel = document.getElementById('langLabel');
+    const container = document.getElementById('mainContainer');
+
+    // عناصر النصوص
+    const headerTitle = document.getElementById('headerTitle');
+    const directCtaText = document.getElementById('directCtaText');
+    const addressText = document.getElementById('addressText');
+    const nameLabel = document.getElementById('nameLabel');
+    const emailLabel = document.getElementById('emailLabel');
+    const messageLabel = document.getElementById('messageLabel');
+    const submitText = document.getElementById('submitText');
+    const popupTitle = document.getElementById('popupTitle');
+    const phoneText = document.getElementById('phoneText');
+    const whatsappText = document.getElementById('whatsappText');
+    const footerText = document.getElementById('footerText');
+    const footerSuffix = document.getElementById('footerSuffix');
+    const submitBtn = document.getElementById('submitBtn');
+
+    // النصوص المترجمة
+    const translations = {
+        ar: {
+            langLabel: 'English',
+            headerTitle: 'تواصل معنا',
+            directCtaText: 'اضغط هنا للتواصل معنا مباشر',
+            addressText: 'الرياض، حي الروضة، شارع عبادة بن الصامت',
+            nameLabel: 'الاسم الكامل',
+            emailLabel: 'البريد الإلكتروني',
+            messageLabel: 'الرسالة',
+            submitText: 'إرسال',
+            popupTitleDirect: 'تواصل مباشر',
+            popupTitleSend: 'إرسال البيانات عبر',
+            phoneText: 'اتصال',
+            whatsappText: 'واتساب',
+            footerText: '© 2026 جميع الحقوق محفوظة - ',
+            footerSuffix: ' للدعاية والإعلان',
+            placeholderName: 'أدخل اسمك',
+            placeholderEmail: 'example@email.com',
+            placeholderMessage: 'اكتب رسالتك هنا...',
+        },
+        en: {
+            langLabel: 'عربي',
+            headerTitle: 'Contact Us',
+            directCtaText: 'Click here to contact us directly',
+            addressText: 'Riyadh, Al-Rawdah, Obadah bin Al-Samit Street',
+            nameLabel: 'Full Name',
+            emailLabel: 'Email Address',
+            messageLabel: 'Message',
+            submitText: 'Send',
+            popupTitleDirect: 'Direct Contact',
+            popupTitleSend: 'Send data via',
+            phoneText: 'Call',
+            whatsappText: 'WhatsApp',
+            footerText: '© 2026 All rights reserved - ',
+            footerSuffix: ' for Advertising & PR',
+            placeholderName: 'Enter your name',
+            placeholderEmail: 'example@email.com',
+            placeholderMessage: 'Write your message here...',
+        }
+    };
+
+    let currentLang = 'ar'; // اللغة الافتراضية
+
+    // دالة تبديل اللغة
+    function toggleLanguage() {
+        currentLang = (currentLang === 'ar') ? 'en' : 'ar';
+        applyLanguage(currentLang);
+        // حفظ الاختيار في localStorage
+        localStorage.setItem('selectedLang', currentLang);
+    }
+
+    // دالة تطبيق اللغة
+    function applyLanguage(lang) {
+        const t = translations[lang];
+
+        // تبديل نص الزر
+        langLabel.textContent = t.langLabel;
+
+        // العناوين والنصوص
+        headerTitle.textContent = t.headerTitle;
+        directCtaText.textContent = t.directCtaText;
+        addressText.textContent = t.addressText;
+        nameLabel.textContent = t.nameLabel;
+        emailLabel.textContent = t.emailLabel;
+        messageLabel.textContent = t.messageLabel;
+        submitText.textContent = t.submitText;
+
+        // العناصر في النافذة المنبثقة (سيتم تحديث العناوين لاحقاً حسب الزر)
+        // لكن النصوص الثابتة: phoneText, whatsappText
+        phoneText.textContent = t.phoneText;
+        whatsappText.textContent = t.whatsappText;
+        footerText.textContent = t.footerText;
+        footerSuffix.textContent = t.footerSuffix;
+
+        // تغيير الـ placeholders
+        document.getElementById('name').placeholder = t.placeholderName;
+        document.getElementById('email').placeholder = t.placeholderEmail;
+        document.getElementById('message').placeholder = t.placeholderMessage;
+
+        // تغيير اتجاه الصفحة
+        if (lang === 'en') {
+            container.classList.remove('rtl');
+            container.classList.add('ltr');
+            document.documentElement.dir = 'ltr';
+            document.documentElement.lang = 'en';
+        } else {
+            container.classList.remove('ltr');
+            container.classList.add('rtl');
+            document.documentElement.dir = 'rtl';
+            document.documentElement.lang = 'ar';
+        }
+
+        // تحديث عنوان النافذة المنبثقة إذا كانت مفتوحة (لكننا سنعتمد على تحديثه عند الفتح)
+        // بما أن popupTitle يتم تعيينه عند الضغط على الزر، سنقوم بتحديثه في المتغيرات العامة
+        // سنقوم بضبط popupTitle في وظيفة الفتح
+    }
+
+    // عند تحميل الصفحة، استرجاع اللغة المحفوظة
+    window.addEventListener('DOMContentLoaded', function() {
+        const savedLang = localStorage.getItem('selectedLang');
+        if (savedLang && (savedLang === 'ar' || savedLang === 'en')) {
+            applyLanguage(savedLang);
+            currentLang = savedLang;
+        } else {
+            applyLanguage('ar');
+        }
+    });
+
+    // زر تبديل اللغة
+    langSwitch.addEventListener('click', toggleLanguage);
+
+    // عناصر النافذة
+    const popupOverlay = document.getElementById('popupOverlay');
+    const closePopupBtn = document.getElementById('closePopupBtn');
+    const phoneLink = document.getElementById('phoneLink');
+    const whatsappLink = document.getElementById('whatsappLink');
+    const directContactBtn = document.getElementById('directContactBtn');
+    const contactForm = document.getElementById('contactForm');
+
+    // إغلاق النافذة
+    function closePopup() {
+        popupOverlay.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+    closePopupBtn.addEventListener('click', closePopup);
+    popupOverlay.addEventListener('click', function(e) {
+        if (e.target === popupOverlay) closePopup();
+    });
+
+    // 1. زر التواصل المباشر (أعلى)
+    directContactBtn.addEventListener('click', function() {
+        const t = translations[currentLang];
+        popupTitle.textContent = t.popupTitleDirect;
+        // ربط الاتصال المباشر
+        phoneLink.href = 'tel:+966569784323';
+        phoneLink.className = 'popup-btn btn-phone';
+        phoneLink.innerHTML = `<i class="fas fa-phone"></i><span>${t.phoneText}</span>`;
+
+        // ربط واتساب مباشر
+        const msg = encodeURIComponent('Hello, I would like to contact you.');
+        whatsappLink.href = `https://wa.me/966569784323?text=${msg}`;
+        whatsappLink.className = 'popup-btn btn-whatsapp';
+        whatsappLink.innerHTML = `<i class="fab fa-whatsapp"></i><span>${t.whatsappText}</span>`;
+
+        document.querySelector('.popup-actions').style.display = 'flex';
+        popupOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    });
+
+    // 2. زر الإرسال (نموذج)
+    function handleSubmit(e) {
+        e.preventDefault();
+
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const message = document.getElementById('message').value.trim();
+
+        if (!name || !email || !message) {
+            alert(currentLang === 'ar' ? 'يرجى تعبئة جميع الحقول' : 'Please fill in all fields');
+            return;
+        }
+
+        const t = translations[currentLang];
+        popupTitle.textContent = t.popupTitleSend;
+
+        // رابط Gmail
+        const subject = encodeURIComponent('Message from ' + name);
+        const bodyGmail = encodeURIComponent(
+            'Name: ' + name + '\n' +
+            'Email: ' + email + '\n\n' +
+            'Message:\n' + message
+        );
+        phoneLink.href = `mailto:Info@shadowdesigner.net?subject=${subject}&body=${bodyGmail}`;
+        phoneLink.className = 'popup-btn btn-gmail';
+        phoneLink.innerHTML = '<i class="fab fa-google"></i><span>Gmail</span>';
+
+        // رابط WhatsApp
+        const bodyWhatsApp = encodeURIComponent(
+            'Name: ' + name + '\n' +
+            'Email: ' + email + '\n\n' +
+            'Message:\n' + message
+        );
+        whatsappLink.href = `https://wa.me/966569784323?text=${bodyWhatsApp}`;
+        whatsappLink.className = 'popup-btn btn-whatsapp';
+        whatsappLink.innerHTML = `<i class="fab fa-whatsapp"></i><span>${t.whatsappText}</span>`;
+
+        document.querySelector('.popup-actions').style.display = 'flex';
+        popupOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+</script>
+
+</body>
+</html>
